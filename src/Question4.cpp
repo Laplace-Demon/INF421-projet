@@ -10,27 +10,27 @@ using std :: pair;
 using std :: reverse;
 using std :: stack;
 
-bool LPDominatedAtHead(stack<pair<int, int>> feasibleChoices, pair<int, int> nextChoice) {
+bool LPDominatedAtHead(stack<Choice> feasibleChoices, Choice nextChoice) {
     if (feasibleChoices.size() <= 1) return false;
-    pair<int, int> currentChoice = feasibleChoices.top();
+    Choice currentChoice = feasibleChoices.top();
     feasibleChoices.pop();
-    pair<int, int> lastChoice = feasibleChoices.top();
-    return (nextChoice.second - currentChoice.second) * (currentChoice.first - lastChoice.first) >= \
-           (currentChoice.second - lastChoice.second) * (nextChoice.first - currentChoice.first);
+    Choice lastChoice = feasibleChoices.top();
+    return (nextChoice.rate - currentChoice.rate) * (currentChoice.cost - lastChoice.cost) >=
+           (currentChoice.rate - lastChoice.rate) * (nextChoice.cost - currentChoice.cost);
 }
 
-void removeLPDominated(int channelNumber, triplets& feasibleChoices) {
-    for (int i = 0; i < channelNumber; ++i) {
-        stack<pair<int, int>> newFeasibleChoices;
-        for (int j = 1; j < feasibleChoices[i].size(); ++j) {
-            while (LPDominatedAtHead(newFeasibleChoices, feasibleChoices[i][j])) newFeasibleChoices.pop();
-            newFeasibleChoices.push(feasibleChoices[i][j]);
+void removeLPDominated(Instance instance) {
+    for (int i = 0; i < instance.channelNumber; ++i) {
+        stack<Choice> newFeasibleChoices;
+        for (int j = 1; j < instance.feasibleChoices[i].size(); ++j) {
+            while (LPDominatedAtHead(newFeasibleChoices, instance.feasibleChoices[i][j])) newFeasibleChoices.pop();
+            newFeasibleChoices.push(instance.feasibleChoices[i][j]);
         }
-        feasibleChoices[i].clear();
+        instance.feasibleChoices[i].clear();
         while (!newFeasibleChoices.empty()) {
-            feasibleChoices[i].push_back(newFeasibleChoices.top());
+            instance.feasibleChoices[i].push_back(newFeasibleChoices.top());
             newFeasibleChoices.pop();
         }
-        reverse(feasibleChoices[i].begin(), feasibleChoices[i].end());
+        reverse(instance.feasibleChoices[i].begin(), instance.feasibleChoices[i].end());
     }
 }

@@ -1,3 +1,3 @@
 #include "func.h"
 
-void removeLPDominated(int channelNumber, triplets& feasibleChoices);
+void removeLPDominated(Instance instance);

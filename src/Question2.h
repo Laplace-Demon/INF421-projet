@@ -5,6 +5,6 @@
 
 using std :: vector;
 
-bool instanceNoSolution(int channelNumber, int choiceNumber, int userNumber, int totalEnergy, const vector<vector<vector<int>>>& powerMatrices, const vector<vector<vector<int>>>& rateMatrices);
+bool instanceNoSolution(Instance instance);
 
-void preprocessing(int channelNumber, int choiceNumber, int userNumber, int totalEnergy, triplets& feasibleChoices);
+void preprocessing(Instance instance);

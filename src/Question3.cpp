@@ -8,23 +8,23 @@ using std :: vector;
 using std :: pair;
 using std :: sort;
 
-void removeReversedPair(vector<pair<int, int>>& array) {
-    int lastValue = 0;
-    vector<pair<int, int>> answer;
-    for (pair<int, int> temp : array) {
-        if (temp.second <= lastValue) continue;
+void removeReversedPair(vector<Choice>& array) {
+    int lastRate = 0;
+    vector<Choice> answer;
+    for (Choice temp : array) {
+        if (temp.rate <= lastRate) continue;
         answer.push_back(temp);
-        lastValue = temp.second;
+        lastRate = temp.rate;
     }
     array = answer;
 }
 
-void sortFeasibleSolutions(int channelNumber, triplets& feasibleChoices) {
-    for (int i = 0; i < channelNumber; ++i)
-        sort(feasibleChoices[i].begin(), feasibleChoices[i].end());
+void sortFeasibleSolutions(Instance instance) {
+    for (int i = 0; i < instance.channelNumber; ++i)
+        sort(instance.feasibleChoices[i].begin(), instance.feasibleChoices[i].end());
 }
 
-void removeIPDominated(int channelNumber, triplets& feasibleChoices) {
-    for (int i = 0; i < channelNumber; ++i)
-        removeReversedPair(feasibleChoices[i]);
+void removeIPDominated(Instance instance) {
+    for (int i = 0; i < instance.channelNumber; ++i)
+        removeReversedPair(instance.feasibleChoices[i]);
 }

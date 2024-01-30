@@ -1,5 +1,5 @@
 #include "func.h"
 
-void sortFeasibleSolutions(int channelNumber, triplets& feasibleChoices);
+void sortFeasibleSolutions(Instance instance);
 
-void removeIPDominated(int channelNumber, triplets& feasibleChoices);
+void removeIPDominated(Instance instance);

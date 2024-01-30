@@ -1,6 +1,6 @@
-#include <vector>
-#include <utility>
 #include <cstdio>
+
+#include "func.h"
 
 using std :: vector;
 using std :: pair;
@@ -31,13 +31,15 @@ void readInput(int& channelNumber, int& choiceNumber, int& userNumber, int& tota
     rateMatrices = tempRateMatrices;
 }
 
-typedef vector<vector<pair<int, int>>> triplets;
-
 triplets matrices2triplet(int channelNumber, int choiceNumber, int userNumber, int totalEnergy, const vector<vector<vector<int>>>& powerMatrices, const vector<vector<vector<int>>>& rateMatrices) {
-    triplets feasibleChoices = vector<vector<pair<int, int>>>(channelNumber);
+    triplets feasibleChoices = vector<vector<Choice>>(channelNumber);
     for (int i = 0; i < channelNumber; ++i)
         for (int j = 0; j < userNumber; ++j)
             for (int k = 0; k < choiceNumber; ++k)
-                feasibleChoices[i].push_back(make_pair(powerMatrices[i][j][k], rateMatrices[i][j][k]));
+                feasibleChoices[i].push_back(Choice(powerMatrices[i][j][k], rateMatrices[i][j][k], j));
     return feasibleChoices;
+}
+
+Instance readInstance(string inputPath) {
+
 }
