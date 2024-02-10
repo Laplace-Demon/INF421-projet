@@ -11,30 +11,20 @@ ILPSolution anotherDPSolveILP(Instance instance) {
     int rateUpperBound = 0;
     for (int i = 0; i < instance.channelNumber; ++i) rateUpperBound += instance.feasibleChoices[i][instance.feasibleChoices[i].size() - 1].rate;
     vector<vector<int>> minimalPower(instance.channelNumber, vector<int>(rateUpperBound + 1, 0));
-    for (int i = 1; i < instance.feasibleChoices[0].size(); ++i) {
+
+    int pos1 = 0;
+    for (int i = 0; i <= rateUpperBound; ++i) {
+        while (instance.feasibleChoices[0][pos1].rate < i) ++pos1;
+        if (pos1 == instance.channelNumber) break;
+        minimalPower[0][i] = instance.feasibleChoices[0][pos1].cost;
     }
+
     for (int i = 1; i < instance.channelNumber; ++i)
-        for (int j = 1; j <= instance.totalEnergy; ++j)
+        for (int j = 0; j <= rateUpperBound; ++j)
             for (Choice temp : instance.feasibleChoices[i])
                 minimalPower[i][j] = min(minimalPower[i - 1][j - temp.rate] + temp.cost, minimalPower[i][j]);
     
     ILPSolution solution;
-    int currentEnergy = instance.totalEnergy;
-    for (int i = instance.channelNumber - 1, &j = instance.totalEnergy; i > 0; --i) {
-        for (Choice temp : instance.feasibleChoices[i]) {
-            if (minimalPower[i][j] == minimalPower[i - 1][j - temp.cost] + temp.rate) {
-                solution.solution.push_back(temp);
-                j -= temp.cost;
-                break;
-            }
-        }
-    }
-    int pos;
-    for (pos = 0; pos < instance.feasibleChoices[0].size(); ++pos) {
-        if (instance.feasibleChoices[0][pos].cost <= currentEnergy) continue;
-    }
-    pos -= 1;
-    solution.solution.push_back(Choice(instance.feasibleChoices[0][pos]));
-    reverse(solution.solution.begin(), solution.solution.end());
+    int currentRate = 0;
     return solution;
 }
