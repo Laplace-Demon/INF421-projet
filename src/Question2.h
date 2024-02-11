@@ -5,6 +5,6 @@
 
 using std :: vector;
 
-bool instanceNoSolution(Instance instance);
+bool instanceNoSolution(const Instance &instance);
 
-void preprocessing(Instance instance);
+void preprocessing(Instance &instance);

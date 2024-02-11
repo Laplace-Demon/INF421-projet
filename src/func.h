@@ -20,8 +20,6 @@ inline int max(int a, int b) {
     return a > b ? a : b;
 }
 
-void readInput(int& channelNumber, int& choiceNumber, int& userNumber, int& totalEnengy, vector<vector<vector<int>>>& powerMatrices, vector<vector<vector<int>>>& rateMatrices);
-
 struct Choice {
     int cost, rate, user;
 
@@ -41,9 +39,21 @@ struct Instance {
     int channelNumber, choiceNumber, userNumber, totalEnergy;
     vector<vector<vector<int>>> powerMatrices, rateMatrices;
     triplets feasibleChoices;
+    Instance () {}
+    Instance (int channelNumber, int choiceNumber, int userNumber, int totalEnergy, vector<vector<vector<int>>> powerMatrices, vector<vector<vector<int>>> rateMatrices, triplets feasibleChoices) {
+        this->channelNumber = channelNumber;
+        this->choiceNumber = choiceNumber;
+        this->userNumber = userNumber;
+        this->totalEnergy = totalEnergy;
+        this->powerMatrices = powerMatrices;
+        this->rateMatrices = rateMatrices;
+        this->feasibleChoices = feasibleChoices;
+    }
 };
 
-Instance readInstance(string inputPath);
+Instance readInstance(char *inputPath);
+
+void printInstance(const Instance &instance, int number);
 
 struct LPSolution {
     vector<Choice> solution;

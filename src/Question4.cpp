@@ -19,9 +19,10 @@ bool LPDominatedAtHead(stack<Choice> feasibleChoices, Choice nextChoice) {
            (currentChoice.rate - lastChoice.rate) * (nextChoice.cost - currentChoice.cost);
 }
 
-void removeLPDominated(Instance instance) {
+void removeLPDominated(Instance &instance) {
     for (int i = 0; i < instance.channelNumber; ++i) {
         stack<Choice> newFeasibleChoices;
+        newFeasibleChoices.push(instance.feasibleChoices[i][0]);
         for (int j = 1; j < instance.feasibleChoices[i].size(); ++j) {
             while (LPDominatedAtHead(newFeasibleChoices, instance.feasibleChoices[i][j])) newFeasibleChoices.pop();
             newFeasibleChoices.push(instance.feasibleChoices[i][j]);

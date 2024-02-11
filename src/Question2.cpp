@@ -6,25 +6,23 @@
 using std :: vector;
 using std :: make_pair;
 
-bool instanceNoSolution(Instance instance) {
+bool instanceNoSolution(const Instance &instance) {
     int minimumTotalEnergy = 0;
     for (int i = 0; i < instance.channelNumber; ++i) {
         int minimumEnergy = 0x3f3f3f3f;
-        for (int j = 0; j < instance.userNumber; ++j)
-            minimumEnergy = min(minimumEnergy, instance.powerMatrices[i][j][0]);
+        for (int j = 0; j < instance.userNumber; ++j) minimumEnergy = min(minimumEnergy, instance.powerMatrices[i][j][0]);
         minimumTotalEnergy += minimumEnergy;
     }
     return minimumTotalEnergy > instance.totalEnergy;
 }
 
-void preprocessing(Instance instance) {
+void preprocessing(Instance &instance) {
     int minimumTotalEnergy = 0; 
     triplets newFeasibleChoices = vector<vector<Choice>>(instance.channelNumber);
     vector<int> minimumEnergies(instance.channelNumber);
     for (int i = 0; i < instance.channelNumber; ++i) {
         int minimumEnergy = 0x3f3f3f3f;
-        for (Choice temp : instance.feasibleChoices[i])
-            minimumEnergy = min(minimumEnergy, temp.cost);
+        for (Choice temp : instance.feasibleChoices[i]) minimumEnergy = min(minimumEnergy, temp.cost);
         minimumEnergies[i] = minimumEnergy;
         minimumTotalEnergy += minimumEnergy;
     }

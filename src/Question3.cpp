@@ -19,12 +19,12 @@ void removeReversedPair(vector<Choice>& array) {
     array = answer;
 }
 
-void sortFeasibleSolutions(Instance instance) {
+void sortFeasibleSolutions(Instance &instance) {
     for (int i = 0; i < instance.channelNumber; ++i)
         sort(instance.feasibleChoices[i].begin(), instance.feasibleChoices[i].end());
 }
 
-void removeIPDominated(Instance instance) {
+void removeIPDominated(Instance &instance) {
     for (int i = 0; i < instance.channelNumber; ++i)
         removeReversedPair(instance.feasibleChoices[i]);
 }

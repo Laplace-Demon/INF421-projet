@@ -1,3 +1,3 @@
 #include "func.h"
 
-void removeLPDominated(Instance instance);
+void removeLPDominated(Instance &instance);
