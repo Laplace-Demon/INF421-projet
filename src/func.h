@@ -56,9 +56,16 @@ Instance readInstance(char *inputPath);
 void printInstance(const Instance &instance, int number);
 
 struct LPSolution {
+    bool has_solution;
     vector<Choice> solution;
     optional<pair<pair<int, double>, Choice>> fractional;
+
+    LPSolution() {
+        this->has_solution = false;
+    }
 };
+
+void LPSolutionAnalysis(Instance instance, LPSolution greedySolution);
 
 struct ILPSolution {
     vector<Choice> solution;

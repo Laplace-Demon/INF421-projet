@@ -21,12 +21,16 @@ LPSolution greedySolveLP(const Instance& instance) {
     priority_queue<pair<double, int>> possibleChoices;
 
     for (int i = 0; i < instance.channelNumber; ++i) {
+        if (instance.feasibleChoices[i].size() == 0) {
+            return LPSolution();
+        }
         remainEnergy -= instance.feasibleChoices[i][0].cost;
         currentChoices.push_back(0);
         if (instance.feasibleChoices[i].size() > currentChoices[i]) possibleChoices.push(make_pair(calculateIncrementalEfficiency(currentChoices[i], instance.feasibleChoices[i]), i));
     }
     
     LPSolution solution;
+    solution.has_solution = true;
     while (!possibleChoices.empty()) {
         pair<double, int> greedyChoice = possibleChoices.top();
         int currentChannel = greedyChoice.second;

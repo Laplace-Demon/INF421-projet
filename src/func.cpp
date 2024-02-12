@@ -48,3 +48,24 @@ void printInstance(const Instance &instance, int number) {
         printf("\n");
     }
 }
+
+void LPSolutionAnalysis(Instance instance, LPSolution greedySolution) {
+    if (greedySolution.has_solution == false) {
+        printf("No solution.\n\n");
+        return;
+    }
+    double sumTransmitPower = 0, sumDataRate = 0;
+    for (Choice choice : greedySolution.solution) {
+        sumTransmitPower += choice.cost;
+        sumDataRate += choice.rate;
+    }
+    if (greedySolution.fractional.has_value()) {
+        int channel = greedySolution.fractional.value().first.first;
+        double coef = greedySolution.fractional.value().first.second;
+        sumDataRate += coef * (double)(greedySolution.fractional.value().second.rate - greedySolution.solution[channel].rate);
+        sumTransmitPower += coef * (double)(greedySolution.fractional.value().second.cost - greedySolution.solution[channel].cost);
+    }
+    printf("Optimal rate: %f.\n", sumDataRate);
+    printf("Used power: %f.\n", sumTransmitPower);
+    printf("Total power budget: %f.\n\n", (double)instance.totalEnergy);
+}
