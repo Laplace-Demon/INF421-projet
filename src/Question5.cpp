@@ -18,7 +18,7 @@ int countChoice(const triplets &feasibleChoices) {
 vector<Instance> processInstances(int number, bool analysis) {
     vector<Instance> instances;
     for (int i = 0; i < number; ++i) {
-        instances.push_back(readInstance(&("data/test" + to_string(i + 4) + ".txt")[0]));
+        instances.push_back(readInstance(&("data/test" + to_string(i + 1) + ".txt")[0]));
         if (analysis) printf("Instance %d:\n", i + 1);
         sortFeasibleSolutions(instances[i]);
         if (analysis) printf("Total triplet numbers initially: %d.\n", countChoice(instances[i].feasibleChoices));

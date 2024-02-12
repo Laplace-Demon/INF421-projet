@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <utility>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -17,8 +18,9 @@ using std :: chrono :: microseconds;
 using std :: cout;
 using std :: endl;
 using std :: to_string;
+using std :: make_pair;
 
-const size_t size = 400000005;
+const size_t size = 4000005;
 int *ia = new int[size];
 int *ja = new int[size];
 double *ar = new double[size];
@@ -78,15 +80,31 @@ glp_prob *prepareLPSolver(const Instance &instance) {
     return lp;
 }
 
-double callLPSolver(glp_prob *lp, Instance instance) {
-    double maximumRate;
-    glp_simplex(lp, NULL);
-    maximumRate = glp_get_obj_val(lp);
-    return maximumRate;
+int callLPSolver(glp_prob *lp) {
+    return glp_simplex(lp, NULL);
+}
+
+LPSolverSolution parseSolverSolution(glp_prob *lp, Instance instance, int status) {
+    LPSolverSolution solution;
+    if (status != 0) return solution;
+    solution.has_solution = true;
+    int N = instance.channelNumber, K = instance.userNumber, M = instance.choiceNumber;
+    bool is_integer = true;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < K; ++j) {
+            for (int k = 0; k < M; ++k) {
+                double temp = glp_get_col_prim(lp, 1 + k + j * M + i * K * M);
+                if (temp != 1.0 && temp != 0.0) is_integer = false;
+                solution.solution.push_back(make_pair(glp_get_col_prim(lp, 1 + k + j * M + i * K * M), Choice(instance.powerMatrices[i][j][k], instance.rateMatrices[i][j][k], j)));
+            }
+        }
+    }
+    solution.is_integer = is_integer;
+    return solution;
 }
 
 int main() {
-    vector<Instance> instances = processInstances(1, false);
+    vector<Instance> instances = processInstances(5, false);
     int cnt = 1;
     for (Instance instance : instances) {
         printf("Instance %d:\n", cnt);
@@ -97,16 +115,21 @@ int main() {
         auto greedyStop = high_resolution_clock :: now();
         auto greedyDuration = duration_cast<microseconds>(greedyStop - greedyStart);
         LPSolutionAnalysis(instance, greedySolution);
-        if (cnt == 4 || cnt == 5) cout << "Time taken by function: " << greedyDuration.count() << " microseconds" << endl << endl;
+        cout << "Time taken by function: " << greedyDuration.count() << " microseconds" << endl << endl;
 
+        if (cnt == 4) {
+            ++cnt;
+            continue;
+        }
         printf("LP solver:\n");
         glp_prob *lp = prepareLPSolver(instance);
         auto solverStart = high_resolution_clock :: now();
-        //LPSolution solverSolution = callLPSolver(lp);
-        //printf("%f\n", callLPSolver(lp, instance));
+        int status = callLPSolver(lp);
         auto solverStop = high_resolution_clock :: now();
         auto solverDuration = duration_cast<microseconds>(solverStop - solverStart);
-        if (cnt == 4 || cnt == 5) cout << "Time taken by function: " << solverDuration.count() << " microseconds" << endl << endl;
+        LPSolverSolution solverSolution = parseSolverSolution(lp, instance, status);
+        LPSolverSolutionAnalysis(instance, solverSolution);
+        cout << "Time taken by function: " << solverDuration.count() << " microseconds" << endl << endl;
 
         ++cnt;
     }

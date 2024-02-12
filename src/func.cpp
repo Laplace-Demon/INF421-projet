@@ -49,22 +49,38 @@ void printInstance(const Instance &instance, int number) {
     }
 }
 
-void LPSolutionAnalysis(Instance instance, LPSolution greedySolution) {
-    if (greedySolution.has_solution == false) {
+void LPSolutionAnalysis(Instance instance, LPSolution solution) {
+    if (solution.has_solution == false) {
         printf("No solution.\n\n");
         return;
     }
     double sumTransmitPower = 0, sumDataRate = 0;
-    for (Choice choice : greedySolution.solution) {
+    for (Choice choice : solution.solution) {
         sumTransmitPower += choice.cost;
         sumDataRate += choice.rate;
     }
-    if (greedySolution.fractional.has_value()) {
-        int channel = greedySolution.fractional.value().first.first;
-        double coef = greedySolution.fractional.value().first.second;
-        sumDataRate += coef * (double)(greedySolution.fractional.value().second.rate - greedySolution.solution[channel].rate);
-        sumTransmitPower += coef * (double)(greedySolution.fractional.value().second.cost - greedySolution.solution[channel].cost);
+    if (solution.fractional.has_value()) {
+        int channel = solution.fractional.value().first.first;
+        double coef = solution.fractional.value().first.second;
+        sumDataRate += coef * (double)(solution.fractional.value().second.rate - solution.solution[channel].rate);
+        sumTransmitPower += coef * (double)(solution.fractional.value().second.cost - solution.solution[channel].cost);
     }
+    printf("Optimal rate: %f.\n", sumDataRate);
+    printf("Used power: %f.\n", sumTransmitPower);
+    printf("Total power budget: %f.\n\n", (double)instance.totalEnergy);
+}
+
+void LPSolverSolutionAnalysis(Instance instance, LPSolverSolution solution) {
+    if (solution.has_solution == false) {
+        printf("No solution.\n\n");
+        return;
+    }
+    double sumTransmitPower = 0, sumDataRate = 0;
+    for (pair<double, Choice> choice : solution.solution) {
+        sumTransmitPower += choice.first * choice.second.cost;
+        sumDataRate += choice.first * choice.second.rate;
+    }
+
     printf("Optimal rate: %f.\n", sumDataRate);
     printf("Used power: %f.\n", sumTransmitPower);
     printf("Total power budget: %f.\n\n", (double)instance.totalEnergy);

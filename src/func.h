@@ -65,7 +65,18 @@ struct LPSolution {
     }
 };
 
-void LPSolutionAnalysis(Instance instance, LPSolution greedySolution);
+void LPSolutionAnalysis(Instance instance, LPSolution solution);
+
+struct LPSolverSolution {
+    bool has_solution, is_integer;
+    vector<pair<double, Choice>> solution;
+
+    LPSolverSolution() {
+        this->has_solution = false;
+    }
+};
+
+void LPSolverSolutionAnalysis(Instance instance, LPSolverSolution solution);
 
 struct ILPSolution {
     vector<Choice> solution;
